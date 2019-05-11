@@ -10,12 +10,11 @@ namespace Runpath.Common.HttpProcessor
     {
         private HttpMethod _method = null;
         private string _requestUri = "";
-        private HttpContent _content = null;
-        private string _bearerToken = "";
-        private string _acceptHeader = "application/json";
-        private TimeSpan _timeout = new TimeSpan(0, 0, 15);
-        private bool _allowAutoRedirect = false;
-        private List<KeyValuePair<string, string>> _formContentValues = null;
+        private readonly HttpContent _content = null;
+        private readonly string _acceptHeader = "application/json";
+        private readonly TimeSpan _timeout = new TimeSpan(0, 0, 15);
+        private readonly bool _allowAutoRedirect = false;
+        private readonly List<KeyValuePair<string, string>> _formContentValues = null;
 
         public HttpRequestBuilder()
         {
@@ -30,25 +29,6 @@ namespace Runpath.Common.HttpProcessor
         public HttpRequestBuilder AddRequestUri(string requestUri)
         {
             this._requestUri = requestUri;
-            return this;
-        }
-
-        public HttpRequestBuilder AddContent(HttpContent content)
-        {
-            this._content = content;
-            return this;
-        }
-
-        public HttpRequestBuilder AddBearerToken(string bearerToken)
-        {
-            this._bearerToken = bearerToken;
-            return this;
-        }
-
-
-        public HttpRequestBuilder AddFormContentValues(List<KeyValuePair<string, string>> formContentValues)
-        {
-            this._formContentValues = formContentValues;
             return this;
         }
 
@@ -67,9 +47,6 @@ namespace Runpath.Common.HttpProcessor
             if (this._content != null)
                 request.Content = this._content;
 
-            if (!string.IsNullOrEmpty(this._bearerToken))
-                request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", this._bearerToken);
-
             request.Headers.Accept.Clear();
             if (!string.IsNullOrEmpty(this._acceptHeader))
                 request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue(this._acceptHeader));
@@ -78,11 +55,9 @@ namespace Runpath.Common.HttpProcessor
                 request.Content = new FormUrlEncodedContent(this._formContentValues);
 
             // Setup client
-            var handler = new HttpClientHandler();
-            handler.AllowAutoRedirect = this._allowAutoRedirect;
+            var handler = new HttpClientHandler { AllowAutoRedirect = this._allowAutoRedirect };
 
-            var client = new System.Net.Http.HttpClient(handler);
-            client.Timeout = this._timeout;
+            var client = new System.Net.Http.HttpClient(handler) { Timeout = this._timeout };
 
             return await client.SendAsync(request);
         }

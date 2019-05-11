@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 using Runpath.Common.Helpers;
-using Runpath.Common.HttpProcessor;
+using Runpath.Common.HttpProcessor.Interfaces;
 using Runpath.Dto.V1;
 using Runpath.Services.V1.Interfaces;
 using System.Collections.Generic;
@@ -11,17 +11,19 @@ namespace Runpath.Services.V1
 {
     public class PhotoService : IPhotoService
     {
+        private readonly IHttpRequestFactory _httpRequestFactory;
         private readonly IAlbumService _albumService;
 
-        public PhotoService(IAlbumService albumService)
+        public PhotoService(IHttpRequestFactory httpRequestFactory, IAlbumService albumService)
         {
+            _httpRequestFactory = httpRequestFactory;
             _albumService = albumService;
         }
 
         public async Task<List<PhotoViewModel>> GetUserSpecificAlbumPhotos(int userId)
         {
             string jsonServiceApiUri = $"{AppSettingsConfiguration.AppSetting("ThirdPartyApiUris:JsonHolderPhotosUri")}";
-            var response = await HttpRequestFactory.Get(jsonServiceApiUri);
+            var response = await _httpRequestFactory.Get(jsonServiceApiUri);
             var responseData = response.Content.ReadAsStringAsync().Result;
             List<PhotoViewModel> photoViewModels = JsonConvert.DeserializeObject<List<PhotoViewModel>>(responseData);
             List<AlbumViewModel> albumViewModels = await _albumService.GetUserAlbums(userId);

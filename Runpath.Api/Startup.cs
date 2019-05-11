@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
+using Runpath.Common.HttpProcessor;
+using Runpath.Common.HttpProcessor.Interfaces;
 using Runpath.Services.V1;
 using Runpath.Services.V1.Interfaces;
 using System;
@@ -36,6 +38,7 @@ namespace Runpath.Api
             builder.Populate(services);
             builder.RegisterType<AlbumService>().As<IAlbumService>().InstancePerLifetimeScope();
             builder.RegisterType<PhotoService>().As<IPhotoService>().InstancePerLifetimeScope();
+            builder.RegisterType<HttpRequestFactory>().As<IHttpRequestFactory>().InstancePerLifetimeScope();
 
             ApplicationContainer = builder.Build();
 
