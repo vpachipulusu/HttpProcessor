@@ -13,7 +13,7 @@ namespace Runpath.Api.Tests.Controllers
 
 
         [Fact]
-        public async Task Get_StateUnderTest_ExpectedBehavior()
+        public async Task GetAblums_Based_on_User_StateUnderTest()
         {
             HttpRequestFactory httpRequestFactory = new HttpRequestFactory();
             var response = await httpRequestFactory.Get($"{_albumsUri}/1");
