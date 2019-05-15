@@ -1,8 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
 using System.IO;
-using System.Net;
-using System.Net.Http;
 using System.Threading.Tasks;
 
 namespace Runpath.Api.Controllers
@@ -29,78 +28,46 @@ namespace Runpath.Api.Controllers
                 Directory.GetCurrentDirectory(), "wwwroot",
                 file.FileName);
 
-            //var stream = file.OpenReadStream();
-            //var name = Path.GetFileName(file.FileName);
 
             using (var stream = new FileStream(path, FileMode.Create))
             {
                 await file.CopyToAsync(stream);
             }
 
-            var downloadStream = new MemoryStream(System.IO.File.ReadAllBytes(path));
 
-            var result = new HttpResponseMessage(HttpStatusCode.OK)
+            var memory = new MemoryStream();
+            using (var stream = new FileStream(path, FileMode.Open))
             {
-                Content = new StreamContent(downloadStream)
-            };
-
-            result.Content.Headers.ContentDisposition = new System.Net.Http.Headers.ContentDispositionHeaderValue("attachment")
-            {
-                FileName = "test.csv"
-            };
-
-            result.Content.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("text/csv");
-
-            return Ok(result);
+                await stream.CopyToAsync(memory);
+            }
+            memory.Position = 0;
+            return File(memory, GetContentType(path), Path.GetFileName(path));
         }
 
-        ///// <summary>
-        ///// 
-        ///// </summary>
-        ///// <param name="filename"></param>
-        //[HttpPost]
-        //public async Task<IActionResult> DownloadFileAsync(string filePath)
-        //{
+        private string GetContentType(string path)
+        {
+            var types = GetMimeTypes();
+            var ext = Path.GetExtension(path).ToLowerInvariant();
+            return types[ext];
+        }
 
-        //    //if (filename == null)
-        //    //    return Content("filename not present");
-
-        //    //var path = Path.Combine(
-        //    //    Directory.GetCurrentDirectory(),
-        //    //    "wwwroot", filename);
-
-        //    //var memory = new MemoryStream();
-        //    //using (var stream = new FileStream(path, FileMode.Open))
-        //    //{
-        //    //    await stream.CopyToAsync(memory);
-        //    //}
-        //    //memory.Position = 0;
-        //    //return File(memory, GetContentType(path), Path.GetFileName(path));
-
-        //    try
-        //    {
-        //        var stream = new MemoryStream(System.IO.File.ReadAllBytes(filePath));
-
-        //        var result = new HttpResponseMessage(HttpStatusCode.OK)
-        //        {
-        //            Content = new StreamContent(stream)
-        //        };
-
-        //        result.Content.Headers.ContentDisposition = new System.Net.Http.Headers.ContentDispositionHeaderValue("attachment")
-        //        {
-        //            FileName = "test.csv"
-        //        };
-
-        //        result.Content.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("application/pdf");
-
-        //        return Ok(result);
-        //    }
-        //    catch (FileNotFoundException)
-        //    {
-        //        return BadRequest();
-        //    }
-
-        //}
+        private Dictionary<string, string> GetMimeTypes()
+        {
+            return new Dictionary<string, string>
+            {
+                {".txt", "text/plain"},
+                {".pdf", "application/pdf"},
+                {".doc", "application/vnd.ms-word"},
+                {".docx", "application/vnd.ms-word"},
+                {".xls", "application/vnd.ms-excel"},
+                {".xlsx", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"},
+                {".png", "image/png"},
+                {".jpg", "image/jpeg"},
+                {".jpeg", "image/jpeg"},
+                {".gif", "image/gif"},
+                {".csv", "text/csv"}
+            };
+        }
 
     }
 }
