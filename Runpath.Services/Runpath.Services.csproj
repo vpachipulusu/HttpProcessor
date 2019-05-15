@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="CsvHelper" Version="12.1.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Runpath.Common\Runpath.Common.csproj" />
+    <ProjectReference Include="..\Runpath.Dto\Runpath.Dto.csproj" />
+  </ItemGroup>
+
+</Project>

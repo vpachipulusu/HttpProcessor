@@ -1,0 +1,109 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Runpath.Api</name>
+    </assembly>
+    <members>
+        <member name="T:Runpath.Api.Controllers.AlbumsController">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Runpath.Api.Controllers.AlbumsController.#ctor(Runpath.Services.V1.Interfaces.IAlbumService)">
+            <summary>
+            
+            </summary>
+            <param name="albumService"></param>
+        </member>
+        <member name="M:Runpath.Api.Controllers.AlbumsController.Get(System.Int32)">
+            <summary>
+            Get ablums based on user id
+            </summary>
+            <param name="userId"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Runpath.Api.Controllers.FileUploadController">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Runpath.Api.Controllers.FileUploadController.CreateMediaItem(Microsoft.AspNetCore.Http.IFormFile)">
+            <summary>
+            
+            </summary>
+            <param name="file"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Runpath.Api.Controllers.PhotosController">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Runpath.Api.Controllers.PhotosController.#ctor(Runpath.Services.V1.Interfaces.IPhotoService)">
+            <summary>
+            
+            </summary>
+            <param name="photoService"></param>
+        </member>
+        <member name="M:Runpath.Api.Controllers.PhotosController.Get(System.Int32)">
+            <summary>
+            Get photos based on user id
+            </summary>
+            <param name="userId"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Runpath.Api.Program">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Runpath.Api.Program.Main(System.String[])">
+            <summary>
+            
+            </summary>
+            <param name="args"></param>
+        </member>
+        <member name="M:Runpath.Api.Program.CreateWebHostBuilder(System.String[])">
+            <summary>
+            
+            </summary>
+            <param name="args"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Runpath.Api.Startup">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Runpath.Api.Startup.#ctor(Microsoft.Extensions.Configuration.IConfiguration)">
+            <summary>
+            
+            </summary>
+            <param name="configuration"></param>
+        </member>
+        <member name="P:Runpath.Api.Startup.Configuration">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:Runpath.Api.Startup.ApplicationContainer">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Runpath.Api.Startup.ConfigureServices(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
+            <summary>
+            
+            </summary>
+            <param name="services"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Runpath.Api.Startup.Configure(Microsoft.AspNetCore.Builder.IApplicationBuilder,Microsoft.AspNetCore.Hosting.IHostingEnvironment)">
+            <summary>
+            
+            </summary>
+            <param name="app"></param>
+            <param name="env"></param>
+        </member>
+    </members>
+</doc>
