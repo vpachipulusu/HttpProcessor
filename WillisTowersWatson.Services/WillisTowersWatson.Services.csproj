@@ -9,7 +9,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\WillisTowerWatson.Dto\WillisTowersWatson.Dto.csproj" />
+    <ProjectReference Include="..\WillisTowersWatson.Dto\WillisTowersWatson.Dto.csproj" />
   </ItemGroup>
 
 </Project>
