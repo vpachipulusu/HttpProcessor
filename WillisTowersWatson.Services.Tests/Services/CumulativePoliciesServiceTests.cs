@@ -2,6 +2,7 @@ using Moq;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using WillisTowersWatson.Dto.ViewModels;
 using WillisTowersWatson.Services.Services;
 using WillisTowersWatson.Services.Tests.TestData;
@@ -45,23 +46,37 @@ namespace WillisTowersWatson.Services.Tests.Services
             }
         }
 
-        [Fact]
-        public void GetCumulativePolicies_StateUnderTest_ExpectedBehavior()
+        [Theory]
+        [InlineData("", 20)]
+        [InlineData("Comp", 3)]
+        [InlineData("Non-Comp", 10)]
+        [InlineData("Non Existing-Comp", 0)]
+        public void GetCumulativePolicies_StateUnderTest_ExpectedBehavior(string specificProduct, int expectedResult)
         {
             // Arrange
             var unitUnderTest = this.CreateService();
-            List<NonCumulativePoliciesViewModel> nonCumulativeViewModels = MockedData.GetNonCumulativePoliciesViewModels();
+            List<NonCumulativePoliciesViewModel> nonCumulativeViewModels;
+            if (string.IsNullOrEmpty(specificProduct))
+            {
+                nonCumulativeViewModels = MockedData.GetNonCumulativePoliciesViewModels();
+            }
+            else
+            {
+                nonCumulativeViewModels = MockedData.GetNonCumulativePoliciesViewModels().Where(p => p.Product.Equals(specificProduct)).ToList();
+            }
 
             // Act
             var result = unitUnderTest.GetCumulativePolicies(nonCumulativeViewModels);
 
             // Assert
-            Assert.True(result.CumulativePoliciesViewModels.Count > 0);
+            Assert.True(result.CumulativePoliciesViewModels.Count == expectedResult);
         }
 
+
         [Theory]
-        [InlineData(@"\TestFiles\InputFile.csv")]
-        public void NonCumulativeInputFileReader_StateUnderTest_ExpectedBehavior(string filePath)
+        [InlineData(@"\TestFiles\InputFile.csv", 12)]
+        [InlineData(@"\TestFiles\FileNotExist.csv", 0)]
+        public void NonCumulativeInputFileReader_StateUnderTest_ExpectedBehavior(string filePath, int expectedResult)
         {
             // Arrange
             var unitUnderTest = this.CreateService();
@@ -71,13 +86,14 @@ namespace WillisTowersWatson.Services.Tests.Services
             var result = unitUnderTest.NonCumulativeInputFileReader(fullFilePath);
 
             // Assert
-            Assert.True(result.Count > 0);
+            Assert.True(result.Count == expectedResult);
         }
 
         [Theory]
-        [InlineData(@"\TestFiles\OutputFile.csv")]
+        [InlineData(@"\TestFiles\OutputFile.csv", 95)]
+        [InlineData(@"\TestFiles\FileNotExist.csv", 0)]
 
-        public void CumulativeOutputFile_StateUnderTest_ExpectedBehavior(string outputFilePath)
+        public void CumulativeOutputFile_StateUnderTest_ExpectedBehavior(string outputFilePath, int contentLength)
         {
             // Arrange
             var unitUnderTest = this.CreateService();
@@ -87,10 +103,12 @@ namespace WillisTowersWatson.Services.Tests.Services
 
             // Act
             unitUnderTest.CumulativeOutputFile(nonCumulativePoliciesViewModels, ref outputFilePath);
-            int content = File.ReadAllText(outputFilePath).Length;
+            int content = 0;
+            if (File.Exists(outputFilePath))
+                content = File.ReadAllText(outputFilePath).Length;
 
             // Assert
-            Assert.True(content > 0);
+            Assert.True(content == contentLength);
         }
     }
 }

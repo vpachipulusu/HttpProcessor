@@ -74,6 +74,11 @@ namespace WillisTowersWatson.Services.Services
 
         public List<NonCumulativePoliciesViewModel> NonCumulativeInputFileReader(string filePath)
         {
+            if (!File.Exists(filePath))
+            {
+                return new List<NonCumulativePoliciesViewModel>();
+            }
+
             using (var reader = new StreamReader(filePath))
             {
                 using (var csv = new CsvReader(reader))
@@ -85,6 +90,9 @@ namespace WillisTowersWatson.Services.Services
 
         public void CumulativeOutputFile(List<NonCumulativePoliciesViewModel> nonCumulativePoliciesViewModels, ref string outputFilePath)
         {
+            if (!File.Exists(outputFilePath))
+                return;
+
             CumulativePoliciesResultViewModel cumulativePoliciesResultViewModel = GetCumulativePolicies(nonCumulativePoliciesViewModels);
             var keys = cumulativePoliciesResultViewModel.CumulativePoliciesViewModels.OrderBy(y => y.CumulativeYear).Select(s => s.CumulativeYear).Distinct().ToArray();
 
