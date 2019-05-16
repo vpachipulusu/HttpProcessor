@@ -53,7 +53,7 @@ namespace WillisTowersWatson.Api.Controllers
                 await stream.CopyToAsync(memory);
             }
             memory.Position = 0;
-            return File(memory, GetContentType(path), Path.GetFileName(path));
+            return File(memory, GetContentType(downloadFile), Path.GetFileName(downloadFile));
         }
 
         private string GetContentType(string path)

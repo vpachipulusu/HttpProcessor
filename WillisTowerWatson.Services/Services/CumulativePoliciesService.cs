@@ -9,6 +9,11 @@ namespace WillisTowersWatson.Services.Services
 {
     public class CumulativePoliciesService : ICumulativePoliciesService
     {
+        /// <summary>
+        /// Get cumulative policies 
+        /// </summary>
+        /// <param name="nonCumulativeViewModels"></param>
+        /// <returns></returns>
         public CumulativePoliciesResultViewModel GetCumulativePolicies(List<NonCumulativePoliciesViewModel> nonCumulativeViewModels)
         {
             CumulativePoliciesResultViewModel cumulativePoliciesResultViewModel = new CumulativePoliciesResultViewModel();
@@ -22,6 +27,8 @@ namespace WillisTowersWatson.Services.Services
 
                 cumulativePoliciesResultViewModel.StartingYear = startingYear;
                 cumulativePoliciesResultViewModel.TotalNumberOfYears = (endingYear - startingYear) + 1;
+
+                //cumulative policies value for each year
                 for (int i = 0; i <= endingYear - startingYear; i++)
                 {
                     int originStartYear = startingYear + i;
@@ -40,6 +47,8 @@ namespace WillisTowersWatson.Services.Services
                                     CumulativeYear = $"{item.OriginYear}-{item.DevelopmentYear}",
                                     Value = item.IncrementalValue
                                 });
+
+                                //Check whether it is last record and exit
                                 if (item.OriginYear == endingYear)
                                     break;
 
@@ -57,6 +66,7 @@ namespace WillisTowersWatson.Services.Services
                         }
                         else
                         {
+                            //Product does not contain any policies in that year
                             cumulativeViewModels.Add(new CumulativePoliciesViewModel()
                             {
                                 Product = product,
@@ -72,6 +82,11 @@ namespace WillisTowersWatson.Services.Services
             return cumulativePoliciesResultViewModel;
         }
 
+        /// <summary>
+        /// Input file reader
+        /// </summary>
+        /// <param name="filePath"></param>
+        /// <returns></returns>
         public List<NonCumulativePoliciesViewModel> NonCumulativeInputFileReader(string filePath)
         {
             if (!File.Exists(filePath))
@@ -88,6 +103,11 @@ namespace WillisTowersWatson.Services.Services
             }
         }
 
+        /// <summary>
+        /// Output file writer
+        /// </summary>
+        /// <param name="nonCumulativePoliciesViewModels"></param>
+        /// <param name="outputFilePath"></param>
         public void CumulativeOutputFile(List<NonCumulativePoliciesViewModel> nonCumulativePoliciesViewModels, ref string outputFilePath)
         {
             if (!File.Exists(outputFilePath))
